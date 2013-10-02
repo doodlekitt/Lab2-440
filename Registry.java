@@ -1,6 +1,6 @@
 class Registry {
 
-    private static Hashtable<String, RemoteObjectReference> =
+    private static Hashtable<String, RemoteObjectReference> objects =
         new Hashtable<String, RemoteObjectReference>();
 
     public boolean bind() {
@@ -8,12 +8,16 @@ class Registry {
         return false;
     }
 
-    public RemoteObjectReference lookup() {
+    public boolean unbind() {
+        // NYI
+        return false;
+    }
+
+    public RemoteObjectReference lookup(String name) {
         return null;
     }
 
-    public list() {
-
+    public String list() {
+        return "";
     }
-
 }
