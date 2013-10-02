@@ -8,27 +8,6 @@ public class RMIServer{
     private static int port = 0;
     private static ServerSocket server = null;
 
-    public static class ROR{
-	private int port;
-	private String host;
-	
-	public ROR (int port, String host){
-	    this.port = port;
-	    this.host = host;
-	}
-
-	public int port(){
-	    return this.port;
-	}
-
-        public String host(){
-	    return this.host;
-	}
-
-    } 
-
-    private static Hashtable<String, ROR> = new Hashtable<String, ROR>();
-
     public static void main (String[] args) throws IOException 
 
 	if(args.length != 1) {
@@ -58,6 +37,4 @@ public class RMIServer{
 	server.close();
 
     }
-
-
 }
