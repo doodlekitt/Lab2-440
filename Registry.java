@@ -3,14 +3,17 @@ class Registry {
     private static Hashtable<String, RemoteObjectReference> objects =
         new Hashtable<String, RemoteObjectReference>();
 
-    public boolean bind() {
-        // NYI
-        return false;
+    public boolean bind(RemoteObjectReference object, String name) {
+        objects.put(name, object);
+        return true;
     }
 
-    public boolean unbind() {
-        // NYI
-        return false;
+    public boolean unbind(String name) {
+        if (!objects.contains(name) {
+            return false;
+        }
+        objects.remove(name);
+        return true;
     }
 
     public RemoteObjectReference lookup(String name) {
@@ -18,6 +21,10 @@ class Registry {
     }
 
     public String list() {
-        return "";
+        String message = "Registry Contains:";
+        for (String name : objects.keySet()) {
+            message = message + name + "\n";
+        }
+        return message;
     }
 }
