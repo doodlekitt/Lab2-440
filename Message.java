@@ -32,6 +32,18 @@ public class Message {
 	    this.command = com;
 	}
 
+	// For LIST RESPONSE
+	public Message (Command com, String[] names){
+	    this.command = com;
+	    this.names = names;
+	}
+
+	// For LOOKUP RESPONSE
+	public Message (Command com, String name, RemoteObjectReference ref){
+	    this.command = com;
+	    this.name = name;
+	    this.ref = ref;
+	}
 	// Accessors
 	public Command command(){
 	    return this.command;
@@ -43,6 +55,10 @@ public class Message {
 
 	public RemoteObjectReference ref(){
 	    return this.ref;
+	}
+
+	public String[] names(){
+	    return this.names;
 	}
     }
 }
