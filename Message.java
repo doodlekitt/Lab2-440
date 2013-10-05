@@ -10,7 +10,9 @@ public class Message {
     public static class Message implements Serializable{
 	private Command command;
 	private String name;
+        private String[] names;
 	private RemoteObjectReference ref;
+        private Execection exception;
 
 	// For BIND
 	public Message (Command com, String name, RemoteObjectReference ref){
