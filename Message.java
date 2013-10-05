@@ -3,19 +3,44 @@ import java.lang.reflect.Constructor;
 
 public class Message {
 
-    /* NEW: Creates a new process
- *      * MIGRATE: Migrates an existing process to another slave
- *           * START: Starts a process from a file
- *                */
     public enum Command {
         BIND, UNBIND, LOOKUP, LIST;
     }
 
-    public static class PMPackage implements Serializable{
+    public static class Message implements Serializable{
+	private Command command;
+	private String name;
+	private RemoteObjectReference ref;
 
+	// For BIND
+	public Message (Command com, String name, RemoteObjectReference ref){
+	    this.command = com;
+	    this.name = name;
+	    this.ref = ref;
+	}
 
+	// For UNBIND and LOOKUP
+	public Message (Command com, String name){
+	    this.command = com;
+	    this.name = name;
+	}
 
+	// For LIST
+	public Message (Command com){
+	    this.command = com;
+	}
 
+	// Accessors
+	public Command command(){
+	    return this.command;
+	}
 
+	public String name() {
+	    return this.name;
+	}
+
+	public RemoteObjectReference ref(){
+	    return this.ref;
+	}
     }
 }
