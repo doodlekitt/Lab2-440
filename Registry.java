@@ -27,4 +27,27 @@ class Registry {
         }
         return message;
     }
+
+    private static void main(String[] args) {
+        Socket client = null;
+        ObjectInputStream is = null;
+        ObjectOutputStream os = null;
+        Message message = null;
+        while(true) {
+            try {
+                client = server.accept();
+                is = new ObjectInputStream(client.getInputStream());
+                os = new ObjectOutputStream(client.getOutputStream());
+                os.flush();
+                message = (Message)is.readObject();
+                processMessage(message);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    private static void processMessage(Message message) {
+
+    }
 }
