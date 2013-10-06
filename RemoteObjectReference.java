@@ -20,4 +20,10 @@ class RemoteObjectReference {
     public Class<?> cls() {
         return this.cls;
     }
+
+    Object localize() {
+        // NYI
+        // Returns a stub... somhow
+        return null;
+    }
 }
