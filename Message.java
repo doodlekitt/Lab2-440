@@ -1,64 +1,97 @@
+import java.net.Socket;
 import java.io.*;
-import java.lang.reflect.Constructor;
 
-public class Message {
+public class Message implements Serializable {
 
+    public static void send(Object message, Socket socket) throws IOException {
+        ObjectOutputStream os =
+            new ObjectOutputStream(socket.getOutputStream());
+        os.flush();
+        os.writeObject(message);
+        // Assumes that reciever closes stream
+    }
+
+    public static Object recieve(Socket socket) throws IOException, ClassNotFoundException {
+        Object response = null;
+        ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+        response = (Object)is.readObject();
+        is.close();
+        return response;
+    }
+
+public static class RegistryCommand {
     public enum Command {
         BIND, UNBIND, LOOKUP, LIST;
     }
 
-    public static class Message implements Serializable{
-	private Command command;
-	private String name;
-        private String[] names;
-	private RemoteObjectReference ref;
-        private Execection exception;
+    private Command command;
+    private String name;
+    private RemoteObjectReference ref;
 
-	// For BIND
-	public Message (Command com, String name, RemoteObjectReference ref){
-	    this.command = com;
-	    this.name = name;
-	    this.ref = ref;
-	}
-
-	// For UNBIND and LOOKUP
-	public Message (Command com, String name){
-	    this.command = com;
-	    this.name = name;
-	}
-
-	// For LIST
-	public Message (Command com){
-	    this.command = com;
-	}
-
-	// For LIST RESPONSE
-	public Message (Command com, String[] names){
-	    this.command = com;
-	    this.names = names;
-	}
-
-	// For LOOKUP RESPONSE
-	public Message (Command com, String name, RemoteObjectReference ref){
-	    this.command = com;
-	    this.name = name;
-	    this.ref = ref;
-	}
-	// Accessors
-	public Command command(){
-	    return this.command;
-	}
-
-	public String name() {
-	    return this.name;
-	}
-
-	public RemoteObjectReference ref(){
-	    return this.ref;
-	}
-
-	public String[] names(){
-	    return this.names;
-	}
+    // For BIND
+    public RegistryCommand (Command com, RemoteObjectReference ref) {
+        this.command = com;
+        this.ref = ref;
     }
+
+    // For UNBIND and LOOKUP
+    public RegistryCommand (Command com, String name) {
+        this.command = com;
+	this.name = name;
+    }
+
+    // For LIST
+    public RegistryCommand (Command com) {
+        this.command = com;
+    }
+
+    // Accessors
+    public Command command() {
+        return this.command;
+    }
+
+    public RemoteObjectReference ref(){
+        return this.ref;
+    }
+
+    public String name() {
+        return this.name;
+    }
+}
+
+public static class RegistryReply {
+    String[] names;
+    RemoteObjectReference ref;
+
+    // For BIND and UNBIND RESPONSE
+    public RegistryReply() {}
+
+    // For LIST RESPONSE
+    public RegistryReply (String[] names){
+        this.names = names;
+    }
+
+    // For LOOKUP RESPONSE
+    public RegistryReply (RemoteObjectReference ref){
+         this.ref = ref;
+    }
+
+    // Accessors
+    public RemoteObjectReference ref(){
+        return this.ref;
+    }
+
+    public String[] names(){
+        return this.names;
+    }
+}
+
+    public static class ProxyCommand {
+
+    }
+
+    public static class ProxyReply {
+
+    }
+
 }

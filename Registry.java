@@ -1,7 +1,12 @@
-class Registry {
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
 
-    private static Hashtable<String, RemoteObjectReference> objects =
-        new Hashtable<String, RemoteObjectReference>();
+class Registry {
+    // Keeps track of bound objects
+    private static HashMap<String, RemoteObjectReference> objects =
+        new HashMap<String, RemoteObjectReference>();
 
     public boolean bind(RemoteObjectReference object, String name) {
         objects.put(name, object);
@@ -9,7 +14,7 @@ class Registry {
     }
 
     public boolean unbind(String name) {
-        if (!objects.contains(name) {
+        if (!objects.containsKey(name)) {
             return false;
         }
         objects.remove(name);
@@ -20,30 +25,39 @@ class Registry {
         return null;
     }
 
-    private static void main(String[] args) {
+    private static void main(String[] args) throws IOException {
+        // Parse args
+        if(args.length != 1) {
+             System.out.println("Expecting command of form:");
+             System.out.println("Registry <port>");
+             return;
+        }
+
+        // Create server socket
+        int port = Integer.valueOf(args[0]).intValue();
+        ServerSocket server = new ServerSocket(port);
+
+        System.out.println("Registry Started");        
+
+        // Connects to clients
         Socket client = null;
-        ObjectInputStream is = null;
-        ObjectOutputStream os = null;
-        Message message = null;
-        Message response = null;
+        Message.RegistryCommand message = null;
+        Message.RegistryReply response = null;
         while(true) {
             try {
                 client = server.accept();
-                is = new ObjectInputStream(client.getInputStream());
-                os = new ObjectOutputStream(client.getOutputStream());
-                os.flush();
-                message = (Message)is.readObject();
+                message = (Message.RegistryCommand)Message.recieve(client);
                 response = processMessage(message);
-                os.writeObject(response);
-                // Lets client clost streams
-            } catch (IOException e) {
+                Message.send(response, client);
+                // Lets client close socket
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println(e);
             }
         }
     }
 
-    private static void processMessage(Message message) {
-        Message response;
+    private static Message.RegistryReply processMessage(Message.RegistryCommand message) {
+        Message.RegistryReply response = null;
         if(message == null)
             return null; // should not occur
         switch (message.command()) {
@@ -60,40 +74,39 @@ class Registry {
         return response;
     }
 
-    public static Message bind(message) {
+    public static Message.RegistryReply bind(Message.RegistryCommand message) {
         if(message.name() == null)
             return null; // TODO: Return error message
         if(message.ref() == null)
             return null; // TODO: Return other error message
         objects.put(message.name(), message.ref());
-        return new Message();
+        return new Message.RegistryReply();
     }
 
-    public static Message unbind(message) {
-        if(message.name() == null || !object.containsKey(message.name())
-            return null // TODO: Return error
+    public static Message.RegistryReply unbind(Message.RegistryCommand message){
+        if(message.name() == null || !objects.containsKey(message.name()))
+            return null; // TODO: Return error
         // TODO: Check if people are using it?  What do we do in that case?
         objects.remove(message.name());
-        return new Message();
+        return new Message.RegistryReply();
 
     }
 
-    public static Message list() {
+    public static Message.RegistryReply list() {
         String[] names = new String[objects.size()];
         int i = 0;
         for (String name : objects.keySet()) {
-            result[i] = name;
-            i++
+            names[i] = name;
+            i++;
         }
-        return new Message(names);
+        return new Message.RegistryReply(names);
     }
 
-    public static Message lookup(Message message) {
+    public static Message.RegistryReply lookup(Message.RegistryCommand message){
         if(message.name() == null || !objects.containsKey(message.name())) {
             return null;  // TODO: Return error message
         }
         RemoteObjectReference ref = objects.get(message.name());
-        // TODO: Probably a lot
-        return new Message();
+        return new Message.RegistryReply(ref);
     }
 }

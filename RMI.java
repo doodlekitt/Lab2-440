@@ -13,57 +13,48 @@ public class RMI
     // The Proxy Dispatcher for this client
     private ProxyDispatcher proxy;
     
-    public RMI(int regPort, String regHost, int proxyPort)
+    public RMI(int regPort, String regHost, int proxyPort) throws IOException
     {
         this.port = regPort;
 	this.host = regHost;
         this.proxy = new ProxyDispatcher(proxyPort);
     }
 
-    public void bind(String name, RemoteObjectReference ref) {
-        proxy.bind(name, ref);
-        Message message = new Message(Message.Command.BIND, name, ref);
+    public void bind(RemoteObjectReference ref) {
+        proxy.bind(ref);
+        Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.BIND, ref);
         sendMessage(message);
     }
 
     public void unbind(String name) {
         proxy.unbind(name);
-        Message message = new Message(Message.Command.UNBIND, name);
+        Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.UNBIND, name);
         sendMessage(message);
     }
 
     public String[] list() {
-        Message message = new Message(Message.Command.LIST);
-        Message response = sendMessage(message);
+        Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.LIST);
+        Message.RegistryReply response = sendMessage(message);
         return response.names;
     }
 
     // returns the ROR from the registry
     public RemoteObjectReference lookup(String name) {
-        Message message = new Message(Message.Command.LOOKUP, name);
-        Message response = sendMessage(message);
+        Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.LOOKUP, name);
+        Message.RegistryReply response = sendMessage(message);
         return response.ref;
     }
 
-    // TODO: Abstract into separate class
-    private Message sendMessage(Message message) {
-        Socket registry = null;
-        ObjectInputStream is = null;
-        ObjectOutputStream os = null;
-        Message response = null;
+    private Message.RegistryReply sendMessage(Message.RegistryCommand message) {
+        Message.RegistryReply response = null;
         try {
-            registry = new Socket(port, host);
-            is = new ObjectInputStream(registry.getInputStream());
-            os = new ObjectOutputStream(registry.getOutputStream());
-            os.flush();
-            os.writeObject(message);
-            reponse = is.readObject();
-            is.close();
-            os.close();
-        } catch (IOException e) {
+            Socket registry = new Socket(host, port);
+            Message.send(message, registry);
+            response = (Message.RegistryReply)Message.recieve(registry);
+            registry.close();
+        } catch (IOException | ClassNotFoundException e) {
             System.out.println(e);
-            return null;
         }
-        return reponse;
+        return response;
     }
 }

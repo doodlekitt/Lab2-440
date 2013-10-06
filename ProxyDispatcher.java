@@ -1,20 +1,24 @@
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+
 class ProxyDispatcher {
-    private static port;
+    private static int port;
     private static ServerSocket server;
 
-    private static Hashtable<String, Object> objects =
-        new Hashtable<String, Object>
+    private static HashMap<String, Object> objects =
+        new HashMap<String, Object>();
 
-    public ProxyDispatcher(int port) {
+    public ProxyDispatcher(int port) throws IOException {
         this.port = port;
         this.server = new ServerSocket(port);
         Accept accept = new Accept();
-        Thread acceptThread = new Thread(accept);
-        acceptThread.start();
+        accept.run();
     }
 
-    public void bind(String name, RemoteObjectReference ref) {
-        objects.put(name, ref);
+    public void bind(RemoteObjectReference ref) {
+        objects.put(ref.name(), ref);
     }
 
     public void unbind(String name) {
@@ -33,19 +37,16 @@ class ProxyDispatcher {
             Socket client = null;
             ObjectInputStream is = null;
             ObjectOutputStream os = null;
-            StubMessage task = null;
-            StubMessage response = null;
+            Message.ProxyCommand task = null;
+            Message.ProxyReply response = null;
             while(flag) {
                 try {
                     client = server.accept();
-                    is = new ObjectInputStream(client.getInputStream());
-                    os = new ObjectOutputStream(client.getOutputStream());
-                    os.flush();
-                    task = (StubMessage)is.readObject();
+                    task = (Message.ProxyCommand)Message.recieve(client);
                     response = execute(task);
-                    os.writeObject(response);
-                    // Expects stub to close streams after finishing 
-                } catch (IOException e) {
+                    Message.send(response, client);
+                    // Expects stub to close socket
+                } catch (IOException | ClassNotFoundException e) {
                     // Don't print exception when stopping thread
                     if(flag) {
                         System.out.println(e);
@@ -59,8 +60,9 @@ class ProxyDispatcher {
         }
     }
 
-    private execute(StubMessage task) {
+    private static Message.ProxyReply execute(Message.ProxyCommand task) {
         // NYI
         // TODO: Execute some method on one of the objects in objects
+        return null;
     }
 }
