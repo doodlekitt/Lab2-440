@@ -13,6 +13,14 @@ class ProxyDispatcher {
         acceptThread.start();
     }
 
+    public void bind(String name, RemoteObjectReference ref) {
+        objects.put(name, ref);
+    }
+
+    public void unbind(String name) {
+        objects.remove(name);
+    }
+
     private static class Accept implements Runnable {
 
         private static boolean flag = true;
@@ -25,13 +33,17 @@ class ProxyDispatcher {
             Socket client = null;
             ObjectInputStream is = null;
             ObjectOutputStream os = null;
+            StubMessage task = null;
+            StubMessage response = null;
             while(flag) {
                 try {
                     client = server.accept();
                     is = new ObjectInputStream(client.getInputStream());
                     os = new ObjectOutputStream(client.getOutputStream());
                     os.flush();
-                    is.readObject();
+                    task = (StubMessage)is.readObject();
+                    response = execute(task);
+                    os.writeObject(response);
                     // Expects stub to close streams after finishing 
                 } catch (IOException e) {
                     // Don't print exception when stopping thread
@@ -45,5 +57,10 @@ class ProxyDispatcher {
         public static void main(String ags[]) {
             (new Thread(new Accept())).start();
         }
+    }
+
+    private execute(StubMessage task) {
+        // NYI
+        // TODO: Execute some method on one of the objects in objects
     }
 }
