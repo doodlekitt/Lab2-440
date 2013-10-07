@@ -1,4 +1,6 @@
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -61,8 +63,35 @@ class ProxyDispatcher {
     }
 
     private static Message.ProxyReply execute(Message.ProxyCommand task) {
-        // NYI
-        // TODO: Execute some method on one of the objects in objects
-        return null;
+        Object object = objects.get(task.name());
+        Method method = null;
+        Class<?>[] argsclass = null;
+        if(task != null && task.args() != null) {
+            argsclass = new Class<?>[task.args().length];
+            for(int i = 0; i < task.args().length; i++) {
+                argsclass[i] = task.args()[i].getClass();
+            }
+        }
+        try {
+            if(argsclass == null) {
+                method = object.getClass().getMethod(task.method());
+            } else {
+                method = object.getClass().getMethod(task.method(), argsclass);
+            }
+        } catch (NoSuchMethodException e) {
+            // TODO: Send back to stub
+            System.out.println(e);
+            return null;
+        }
+        // Invoke method
+        Object response = null;
+        try {
+            response = method.invoke(object, task.args());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+
+            System.out.println(e);
+            return null;  // TODO: Exception handling
+        }
+        return new Message.ProxyReply(response);
     }
 }

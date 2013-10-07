@@ -87,11 +87,39 @@ public static class RegistryReply {
 }
 
     public static class ProxyCommand {
+        private String name;
+        private String method;
+        private Object[] args = null;
 
+        public ProxyCommand(String name, String method, Object[] args) {
+            this.name = name;
+            this.method = method;
+            this.args = args;
+        }
+
+        public String name() {
+            return this.name;
+        }
+
+        public String method() {
+            return this.method;
+        }
+
+        public Object[] args() {
+            return this.args;
+        }
     }
 
     public static class ProxyReply {
+        Object returned;  // The value returned
 
+        public ProxyReply(Object returned) {
+            this.returned = returned;
+        }
+
+        public Object returned() {
+            return this.returned;
+        }
     }
 
 }
