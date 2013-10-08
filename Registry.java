@@ -21,6 +21,7 @@ class Registry {
         return true;
     }
 
+    // What does this even need to be here for?
     public RemoteObjectReference lookup(String name) {
         return null;
     }
