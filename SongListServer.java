@@ -1,0 +1,8 @@
+public interface SongListServer {
+
+    public void initialise(SongList songs);
+    public String find(String song);
+    public SongList findAll();
+    public void printAll();
+
+}
