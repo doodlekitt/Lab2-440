@@ -1,4 +1,5 @@
 import java.lang.*;
+import java.lang.reflect.*;
 
 class RemoteObjectReference {
     private String host;
@@ -36,18 +37,19 @@ class RemoteObjectReference {
 	return this.riname;
     }
 
-    public Object localise() {
+    public Object localise() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 	// Uses interface name to identify the class stub
-	Class c = Class.forName(this.riname+"_stub");
+	Class<?> c = Class.forName(this.riname+"_stub");
 
 	// For ease of passing relevant information for sockets
 	// pass along the remote object reference info as a string
 
 	// Neglect cls as is unnecessary
-	String[] args = {this.host, (this.port.toString()), this.name, this.riname };
+	String[] args = {this.host, ((Integer)this.port).toString(),
+            this.name, this.riname };
 
-	Object stub =c.getConstructor(String[].class).newInstance((Object)args);
+        Object stub =c.getConstructor(String[].class).newInstance((Object)args);
 
         return stub;
     }

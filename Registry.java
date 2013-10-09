@@ -8,24 +8,6 @@ class Registry {
     private static HashMap<String, RemoteObjectReference> objects =
         new HashMap<String, RemoteObjectReference>();
 
-    public boolean bind(RemoteObjectReference object, String name) {
-        objects.put(name, object);
-        return true;
-    }
-
-    public boolean unbind(String name) {
-        if (!objects.containsKey(name)) {
-            return false;
-        }
-        objects.remove(name);
-        return true;
-    }
-
-    // What does this even need to be here for?
-    public RemoteObjectReference lookup(String name) {
-        return null;
-    }
-
     private static void main(String[] args) throws IOException {
         // Parse args
         if(args.length != 1) {

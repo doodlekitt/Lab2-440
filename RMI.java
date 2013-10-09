@@ -13,7 +13,7 @@ public class RMI
     // The Proxy Dispatcher for this client
     private ProxyDispatcher proxy;
     
-    public RMI(int regPort, String regHost, int proxyPort) throws IOException
+    public RMI(String regHost, int regPort, int proxyPort) throws IOException
     {
         this.port = regPort;
 	this.host = regHost;

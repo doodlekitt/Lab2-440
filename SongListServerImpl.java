@@ -37,7 +37,7 @@ public class SongListServerImpl implements SongListServer{
 	SongList temp = songs;
 	while(temp != null){
 	    System.out.println ("Song: "+temp.song+", "+
-				"Artist: }+temp.artist+"\n");
+				"Artist: "+temp.artist+"\n");
 	    temp = temp.next;
 	}
     }

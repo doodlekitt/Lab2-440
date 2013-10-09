@@ -11,11 +11,17 @@ public class Message implements Serializable {
         // Assumes that reciever closes stream
     }
 
-    public static Object recieve(Socket socket) throws IOException, ClassNotFoundException {
+    public static Object recieve(Socket socket) throws IOException {
         Object response = null;
-        ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
-        response = (Object)is.readObject();
-        is.close();
+
+        try {
+            ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+            response = (Object)is.readObject();
+            is.close();
+        } catch (ClassNotFoundException e) {
+            System.out.println(e);
+        }
+
         return response;
     }
 
