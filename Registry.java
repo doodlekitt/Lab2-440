@@ -33,7 +33,7 @@ class Registry {
                 response = processMessage(message);
                 Message.send(response, client);
                 // Lets client close socket
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 System.out.println(e);
             }
         }
