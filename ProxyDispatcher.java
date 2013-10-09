@@ -47,8 +47,8 @@ class ProxyDispatcher {
                     task = (Message.ProxyCommand)Message.recieve(client);
                     response = execute(task);
                     Message.send(response, client);
-                    // Expects stub to close socket
-                } catch (IOException | ClassNotFoundException e) {
+                    client.close();
+                } catch (IOException e) {
                     // Don't print exception when stopping thread
                     if(flag) {
                         System.out.println(e);

@@ -73,6 +73,7 @@ public class SongListServer_stub implements SongListServer {
             Message.send(message, stub);
             // recieve message
             reply = (Message.ProxyReply) Message.recieve(stub);
+            stub.close();
         } catch (IOException e) {
             System.out.println(e);
         }

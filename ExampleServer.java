@@ -16,8 +16,8 @@ public class ExampleServer {
     // (2) proxy port to listen on
     public ExampleServer(String[] args) throws UnknownHostException {
 
-	if(args.length < 4){
-	    System.out.println("Insufficient Arguments. Requires:");
+	if(args.length != 3){
+	    System.out.println("Incorrect Arguments. Requires:");
 	    System.out.println("<registryhost> <registryport> <proxyport>");
 	    return;
 	}
@@ -52,7 +52,7 @@ public class ExampleServer {
 		    break;
 		}
 	        if(command.startsWith("new")) {
-        	    if(commandargs.length < 4) {
+        	    if(commandargs.length != 3) {
                		System.out.println("Expecting command of form:");
                 	System.out.println
 				("new <Class> <name> <riname> <arguments>");

@@ -8,7 +8,6 @@ public class Message implements Serializable {
             new ObjectOutputStream(socket.getOutputStream());
         os.flush();
         os.writeObject(message);
-        // Assumes that reciever closes stream
     }
 
     public static Object recieve(Socket socket) throws IOException {
@@ -17,7 +16,6 @@ public class Message implements Serializable {
         try {
             ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
             response = (Object)is.readObject();
-            is.close();
         } catch (ClassNotFoundException e) {
             System.out.println(e);
         }
