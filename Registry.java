@@ -8,7 +8,7 @@ class Registry {
     private static HashMap<String, RemoteObjectReference> objects =
         new HashMap<String, RemoteObjectReference>();
 
-    private static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         // Parse args
         if(args.length != 1) {
              System.out.println("Expecting command of form:");
