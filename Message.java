@@ -1,7 +1,7 @@
 import java.net.Socket;
 import java.io.*;
 
-public class Message implements Serializable {
+public class Message {
 
     public static void send(Object message, Socket socket) throws IOException {
         ObjectOutputStream os =
@@ -23,7 +23,7 @@ public class Message implements Serializable {
         return response;
     }
 
-public static class RegistryCommand {
+public static class RegistryCommand implements Serializable {
     public enum Command {
         BIND, UNBIND, LOOKUP, LIST;
     }
@@ -63,7 +63,7 @@ public static class RegistryCommand {
     }
 }
 
-public static class RegistryReply {
+public static class RegistryReply implements Serializable {
     String[] names;
     RemoteObjectReference ref;
 
@@ -90,7 +90,7 @@ public static class RegistryReply {
     }
 }
 
-    public static class ProxyCommand {
+    public static class ProxyCommand implements Serializable {
         private String name;
         private String method;
         private Object[] args = null;
@@ -114,7 +114,7 @@ public static class RegistryReply {
         }
     }
 
-    public static class ProxyReply {
+    public static class ProxyReply implements Serializable {
         Object returned;  // The value returned
 
         public ProxyReply(Object returned) {

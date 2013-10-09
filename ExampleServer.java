@@ -6,15 +6,15 @@ import java.lang.*;
 public class ExampleServer {
 
     private static String host;
-    private String reghost;
-    private int regport;
-    private int proxyport;
+    private static String reghost;
+    private static int regport;
+    private static int proxyport;
 
     // Takes these as arguments
     // (0) registry host
     // (1) registry port
     // (2) proxy port to listen on
-    public ExampleServer(String[] args) throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException {
 
 	if(args.length != 3){
 	    System.out.println("Incorrect Arguments. Requires:");
@@ -23,24 +23,21 @@ public class ExampleServer {
 	}
 
 	// Get machine's host
-	this.host = (InetAddress.getLocalHost()).getHostName();
+	host = (InetAddress.getLocalHost()).getHostName();
 
 	// Get registry host and port
 	// Get port for proxy dispatcher to listen on
-	this.reghost = args[0];
-	this.regport = Integer.valueOf(args[1]).intValue();
-	this.proxyport = Integer.valueOf(args[2]).intValue();
-
+	reghost = args[0];
+	regport = Integer.valueOf(args[1]).intValue();
+	proxyport = Integer.valueOf(args[2]).intValue();
         try {
 	    // Create RMI to handle proxy dispatching and object binding
             RMI rmi = new RMI(reghost, regport, proxyport);
-
             // Read in from commandline to create and bind new objects
             BufferedReader br =
                 new BufferedReader(new InputStreamReader(System.in));
             String command = null;
             String[] commandargs = null;
-
 	    while(true){
 		System.out.print(" > ");
 		command = br.readLine();
@@ -51,13 +48,20 @@ public class ExampleServer {
 		{
 		    break;
 		}
-	        if(command.startsWith("new")) {
-        	    if(commandargs.length != 3) {
+                else if(command.startsWith("list")) {
+                    System.out.println("These objects are in the Registry:");
+                    String[] names = rmi.list();
+                    for(int i = 0; i < names.length; i++) {
+                        System.out.println(names[i]);
+                    }
+                }
+	        else if(command.startsWith("new")) {
+        	    if(commandargs.length < 4) {
                		System.out.println("Expecting command of form:");
                 	System.out.println
 				("new <Class> <name> <riname> <arguments>");
                 	return;
-             	    }   
+             	    }
             	    // check if class is valid
             	    Class<?> c = null;
             	    try{
@@ -81,8 +85,12 @@ public class ExampleServer {
 
             	    // Now attempt to make new object
 		    try{
-			ob = c.getConstructor(String[].class)
-			     .newInstance((Object)class_args);
+                        if(class_args.length != 0) {
+			    ob = c.getConstructor(String[].class)
+			         .newInstance((Object)class_args);
+                        } else {
+                            ob = c.newInstance();
+                        }
 		    } catch (Exception e) {
 			System.out.println(e);
 			return;
@@ -90,14 +98,15 @@ public class ExampleServer {
 
 		    // Create RemoteObjectReference
 		    RemoteObjectReference rem = new RemoteObjectReference
-				(this.host, this.proxyport, c, name, riname);
+				(host, proxyport, c, name, riname);
 		
 		    // Bind it using RMI
-		    rmi.bind(rem);	    	
+		    rmi.bind(rem, ob);	    	
 		}
 		else {
 		    System.out.println("Invalid Command");
 		}
+                command = null;
 	    }
 
             // Clean up

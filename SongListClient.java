@@ -13,7 +13,7 @@ public class SongListClient{
 
     public static void main (String[] args) throws IOException{
 
-	if(args.length < 5){
+	if(args.length != 5){
 	    System.out.println("Insufficient Arguments. Requires:");
 	    System.out.println("<registryhost> <registryport> <proxyport>" + 
 				" <objectname> <filename>");
@@ -58,12 +58,13 @@ public class SongListClient{
 	SongList temp = songs;
 	System.out.println("Original List:");
 	while(temp != null){
-	     System.out.println("Song: "+temp.song+ "Artist: "+temp.artist);
+	     System.out.println("Song: "+temp.song+ " Artist: "+temp.artist);
 	     temp = temp.next;
 	}
 	
 	// Test all functions!
 	// Test initialise
+	System.out.println("Initializing...");
 	sls.initialise(songs);
 	System.out.println("\n Sent initialise");
 
@@ -87,7 +88,9 @@ public class SongListClient{
 	// Test remote site printing with printAll
 	System.out.println("\n Testing the Remote Site Printing");
 	sls.printAll();
+        System.out.println("Done with ALL THE THINGS!!");
 
+        return;
     } 
 
 

@@ -1,4 +1,6 @@
-public class SongList
+import java.io.*;
+
+public class SongList implements Serializable
 {
     String song;
     String artist;

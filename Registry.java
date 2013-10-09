@@ -58,19 +58,22 @@ class Registry {
     }
 
     public static Message.RegistryReply bind(Message.RegistryCommand message) {
-        if(message.name() == null)
+        if(message.ref() == null || message.ref().name() == null) {
+            System.out.println("BIND: message has nullness");
             return null; // TODO: Return error message
-        if(message.ref() == null)
-            return null; // TODO: Return other error message
-        objects.put(message.name(), message.ref());
+        }
+        objects.put(message.ref().name(), message.ref());
+        // TEST code
+        System.out.println("Finished binding " + message.ref().name());
         return new Message.RegistryReply();
     }
 
     public static Message.RegistryReply unbind(Message.RegistryCommand message){
-        if(message.name() == null || !objects.containsKey(message.name()))
+        if(message.ref() == null || message.ref().name() == null
+           || !objects.containsKey(message.ref().name()))
             return null; // TODO: Return error
         // TODO: Check if people are using it?  What do we do in that case?
-        objects.remove(message.name());
+        objects.remove(message.ref().name());
         return new Message.RegistryReply();
 
     }

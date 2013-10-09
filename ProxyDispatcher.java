@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-class ProxyDispatcher {
+class ProxyDispatcher implements Runnable {
     private static int port;
     private static ServerSocket server;
 
@@ -15,19 +15,19 @@ class ProxyDispatcher {
     public ProxyDispatcher(int port) throws IOException {
         this.port = port;
         this.server = new ServerSocket(port);
-        Accept accept = new Accept();
-        accept.run();
+      //  Accept accept = new Accept();
+      //  accept.run();
     }
 
-    public void bind(RemoteObjectReference ref) {
-        objects.put(ref.name(), ref);
+    public void bind(String name, Object obj) {
+        objects.put(name, obj);
     }
 
     public void unbind(String name) {
         objects.remove(name);
     }
 
-    private static class Accept implements Runnable {
+    //private static class Accept implements Runnable {
 
         private static boolean flag = true;
 
@@ -57,16 +57,17 @@ class ProxyDispatcher {
             }
         }
 
-        public static void main(String ags[]) {
-            (new Thread(new Accept())).start();
-        }
-    }
+        //public static void main(String ags[]) {
+        //    (new Thread(new ProxyDispatcher)).start();
+        //}
+    //}
 
     private static Message.ProxyReply execute(Message.ProxyCommand task) {
         Object object = objects.get(task.name());
+        System.out.println("Found object by name of " + task.name());
         Method method = null;
         Class<?>[] argsclass = null;
-        if(task != null && task.args() != null) {
+        if(task != null && task.args() != null && task.args().length > 0) {
             argsclass = new Class<?>[task.args().length];
             for(int i = 0; i < task.args().length; i++) {
                 argsclass[i] = task.args()[i].getClass();

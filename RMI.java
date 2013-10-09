@@ -12,16 +12,20 @@ public class RMI
     private int port;
     // The Proxy Dispatcher for this client
     private ProxyDispatcher proxy;
+    private Thread proxyThread;
     
     public RMI(String regHost, int regPort, int proxyPort) throws IOException
     {
         this.port = regPort;
 	this.host = regHost;
         this.proxy = new ProxyDispatcher(proxyPort);
+        this.proxyThread = new Thread(proxy);
+        proxyThread.start();
+System.out.println("New RMI");
     }
 
-    public void bind(RemoteObjectReference ref) {
-        proxy.bind(ref);
+    public void bind(RemoteObjectReference ref, Object obj) {
+        proxy.bind(ref.name(), obj);
         Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.BIND, ref);
         sendMessage(message);
     }
@@ -49,10 +53,12 @@ public class RMI
         Message.RegistryReply response = null;
         try {
             Socket registry = new Socket(host, port);
+if(message == null) { System.out.println("TEST: message null"); }
             Message.send(message, registry);
             response = (Message.RegistryReply)Message.recieve(registry);
             registry.close();
-        } catch (IOException | ClassNotFoundException e) {
+System.out.println("Sent message");
+        } catch (IOException e) {
             System.out.println(e);
         }
         return response;
