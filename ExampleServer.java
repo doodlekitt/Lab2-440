@@ -57,7 +57,8 @@ public class ExampleServer {
                 else if(command.startsWith("quit"))
 		{
                     for (String name : objects.keySet()) {
-                        rmi.unbind(name);;
+                        System.out.println("Unbinding " + name);
+                        rmi.unbind(name);
                     }
 		    break;
 		}
@@ -95,7 +96,7 @@ public class ExampleServer {
             	    String[] class_args = 
 			Arrays.copyOfRange(commandargs, 4, commandargs.length);
             	    Object obj = null;
-                    objects.put("name", obj);
+                    objects.put(name, obj);
 
             	    // Now attempt to make new object
 		    try{

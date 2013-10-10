@@ -46,7 +46,8 @@ class Registry {
         switch (message.command()) {
             case BIND: response = bind(message);
                        break;
-            case UNBIND: response = unbind(message);
+            case UNBIND: System.out.println("Recieved unbind request");
+                         response = unbind(message);
                          break;
             case LOOKUP: response = lookup(message);
                          break;
@@ -59,16 +60,18 @@ class Registry {
 
     public static Message.RegistryReply bind(Message.RegistryCommand message) {
         if(message.ref() == null || message.ref().name() == null) {
-            return null; // TODO: Return error message
+            System.out.println("Cannot BIND with null ROR");
+            return null;
         }
         objects.put(message.ref().name(), message.ref());
         return new Message.RegistryReply();
     }
 
     public static Message.RegistryReply unbind(Message.RegistryCommand message){
-        if(message.name() || !objects.containsKey(message.name()))
-            return null; // TODO: Return error
-        // TODO: Check if people are using it?  What do we do in that case?
+        if(message.name() == null || !objects.containsKey(message.name())) {
+            System.out.println("Cannot UNBIND, no object by name " + message.name());
+            return null;
+        }
         objects.remove(message.name());
         return new Message.RegistryReply();
     }
