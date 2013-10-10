@@ -15,8 +15,6 @@ class ProxyDispatcher implements Runnable {
     public ProxyDispatcher(int port) throws IOException {
         this.port = port;
         this.server = new ServerSocket(port);
-      //  Accept accept = new Accept();
-      //  accept.run();
     }
 
     public void bind(String name, Object obj) {
@@ -36,7 +34,7 @@ class ProxyDispatcher implements Runnable {
             Socket socket = new Socket("localhost", port);
             socket.close();
         }catch (IOException e) {
-            // Do nothing
+            // Do nothing for errors
         }
     }
 
@@ -64,17 +62,17 @@ class ProxyDispatcher implements Runnable {
 
     private static Message.ProxyReply execute(Message.ProxyCommand task) {
         Object object = objects.get(task.name());
-        System.out.println("Found object by name of " + task.name());
         Method method = null;
         Class<?>[] argsclass = null;
-        if(task != null && task.args() != null && task.args().length > 0) {
+        // Get the class for all arguements
+        if(task != null && task.args() != null) {
             argsclass = new Class<?>[task.args().length];
             for(int i = 0; i < task.args().length; i++) {
                 argsclass[i] = task.args()[i].getClass();
             }
         }
         try {
-            if(argsclass == null) {
+            if(argsclass != null && argsclass.length > 0) {
                 method = object.getClass().getMethod(task.method());
             } else {
                 method = object.getClass().getMethod(task.method(), argsclass);

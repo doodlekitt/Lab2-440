@@ -1,5 +1,5 @@
-import java.net.Socket;
 import java.io.*;
+import java.net.Socket;
 
 public class Message {
 
@@ -23,14 +23,14 @@ public class Message {
         return response;
     }
 
-public static class RegistryCommand implements Serializable {
-    public enum Command {
-        BIND, UNBIND, LOOKUP, LIST;
-    }
+    public static class RegistryCommand implements Serializable {
+        public enum Command {
+            BIND, UNBIND, LOOKUP, LIST;
+        }
 
-    private Command command;
-    private String name;
-    private RemoteObjectReference ref;
+        private Command command;
+        private String name;
+        private RemoteObjectReference ref;
 
     // For BIND
     public RegistryCommand (Command com, RemoteObjectReference ref) {
@@ -41,7 +41,7 @@ public static class RegistryCommand implements Serializable {
     // For UNBIND and LOOKUP
     public RegistryCommand (Command com, String name) {
         this.command = com;
-	this.name = name;
+        this.name = name;
     }
 
     // For LIST

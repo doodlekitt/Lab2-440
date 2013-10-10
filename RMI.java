@@ -21,7 +21,6 @@ public class RMI
         this.proxy = new ProxyDispatcher(proxyPort);
         this.proxyThread = new Thread(proxy);
         proxyThread.start();
-System.out.println("New RMI");
     }
 
     public void bind(RemoteObjectReference ref, Object obj) {
@@ -49,21 +48,21 @@ System.out.println("New RMI");
         return response.ref;
     }
 
+    // Sends a message to the registry and returns the response
     private Message.RegistryReply sendMessage(Message.RegistryCommand message) {
         Message.RegistryReply response = null;
         try {
             Socket registry = new Socket(host, port);
-if(message == null) { System.out.println("TEST: message null"); }
             Message.send(message, registry);
             response = (Message.RegistryReply)Message.recieve(registry);
             registry.close();
-System.out.println("Sent message");
         } catch (IOException e) {
             System.out.println(e);
         }
         return response;
     }
 
+    // Stops the proxy thread.  Should always call at end of function.
     public void close() {
         proxy.stop();
     }

@@ -59,12 +59,9 @@ class Registry {
 
     public static Message.RegistryReply bind(Message.RegistryCommand message) {
         if(message.ref() == null || message.ref().name() == null) {
-            System.out.println("BIND: message has nullness");
             return null; // TODO: Return error message
         }
         objects.put(message.ref().name(), message.ref());
-        // TEST code
-        System.out.println("Finished binding " + message.ref().name());
         return new Message.RegistryReply();
     }
 

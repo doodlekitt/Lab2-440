@@ -42,7 +42,6 @@ class RemoteObjectReference implements Serializable {
 
 	// Uses interface name to identify the class stub
 	Class<?> c = Class.forName(this.riname+"_stub");
-        System.out.println("Created class of name: " + c);
 
 	// For ease of passing relevant information for sockets
 	// pass along the remote object reference info as a string
@@ -50,9 +49,7 @@ class RemoteObjectReference implements Serializable {
 	// Neglect cls as is unnecessary
 	String[] args = {this.host, ((Integer)this.port).toString(),
             this.name, this.riname };
-        System.out.println("Creating new stub....");
         Object stub =c.getConstructor(String[].class).newInstance((Object)args);
-        System.out.println("New stub!");
 
         return stub;
     }

@@ -17,11 +17,9 @@ public class SongListServer_stub implements SongListServer {
     }
 
     public void initialise(SongList songs){
-        System.out.println("Stub is initialising..."); 
 	String mthd = "initialise";
 	Object[] args = {songs};
 	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd,args);
-    	System.out.println("Sending message...");
         // Sends message;
 	sendMessage(msg);
     }
@@ -71,13 +69,10 @@ public class SongListServer_stub implements SongListServer {
             stub = new Socket(host, port);
 
             // send message
-            System.out.println("sending message....");
             Message.send(message, stub);
             // recieve message
-            System.out.println("recieveing message....");
             reply = (Message.ProxyReply) Message.recieve(stub);
             stub.close();
-            System.out.println("message recieved!");
         } catch (IOException e) {
             System.out.println(e);
         }

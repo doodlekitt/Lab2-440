@@ -64,9 +64,7 @@ public class SongListClient{
 	
 	// Test all functions!
 	// Test initialise
-	System.out.println("Initializing...");
 	sls.initialise(songs);
-	System.out.println("\n Sent initialise");
 
 	// Test find!
 	System.out.println("\n Here is the list returned by find!");
@@ -86,9 +84,7 @@ public class SongListClient{
 	}
 	
 	// Test remote site printing with printAll
-	System.out.println("\n Testing the Remote Site Printing");
 	sls.printAll();
-        System.out.println("Done with ALL THE THINGS!!");
 
         rmi.close();
         return;

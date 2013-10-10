@@ -1,7 +1,7 @@
-import java.util.*;
-import java.net.*;
 import java.io.*;
 import java.lang.*;
+import java.net.*;
+import java.util.*;
 
 public class ExampleServer {
 
@@ -81,15 +81,15 @@ public class ExampleServer {
 		    // do I need to check this?
             	    String[] class_args = 
 			Arrays.copyOfRange(commandargs, 4, commandargs.length);
-            	    Object ob = null;
+            	    Object obj = null;
 
             	    // Now attempt to make new object
 		    try{
                         if(class_args.length != 0) {
-			    ob = c.getConstructor(String[].class)
-			         .newInstance((Object)class_args);
+			    obj = c.getConstructor(String[].class)
+                                .newInstance((Object)class_args);
                         } else {
-                            ob = c.newInstance();
+                            obj = c.newInstance();
                         }
 		    } catch (Exception e) {
 			System.out.println(e);
@@ -101,7 +101,7 @@ public class ExampleServer {
 				(host, proxyport, c, name, riname);
 		
 		    // Bind it using RMI
-		    rmi.bind(rem, ob);	    	
+		    rmi.bind(rem, obj);	    	
 		}
 		else {
 		    System.out.println("Invalid Command");
@@ -116,6 +116,4 @@ public class ExampleServer {
 	    System.out.println(e);
 	}
     }
-
-
 }
