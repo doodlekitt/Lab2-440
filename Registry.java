@@ -66,13 +66,11 @@ class Registry {
     }
 
     public static Message.RegistryReply unbind(Message.RegistryCommand message){
-        if(message.ref() == null || message.ref().name() == null
-           || !objects.containsKey(message.ref().name()))
+        if(message.name() || !objects.containsKey(message.name()))
             return null; // TODO: Return error
         // TODO: Check if people are using it?  What do we do in that case?
-        objects.remove(message.ref().name());
+        objects.remove(message.name());
         return new Message.RegistryReply();
-
     }
 
     public static Message.RegistryReply list() {

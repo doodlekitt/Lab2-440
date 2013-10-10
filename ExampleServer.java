@@ -10,7 +10,7 @@ public class ExampleServer {
     private static int regport;
     private static int proxyport;
 
-    private static HashMap<String,Object> objects = new HashMap<String,Object>;
+    private static HashMap<String,Object> objects = new HashMap<String,Object>();
 
     // Takes these as arguments
     // (0) registry host
