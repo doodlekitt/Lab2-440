@@ -67,12 +67,13 @@ class Registry {
         return new Message.RegistryReply();
     }
 
-    public static Message.RegistryReply unbind(Message.RegistryCommand message){
-        if(message.name() == null || !objects.containsKey(message.name())) {
-            System.out.println("Cannot UNBIND, no object by name " + message.name());
+    public static Message.RegistryReply unbind(Message.RegistryCommand msg){
+        if(msg.name() == null || !objects.containsKey(msg.name())){
+            System.out.println("Cannot UNBIND: no object by name "
+                + msg.name());
             return null;
         }
-        objects.remove(message.name());
+        objects.remove(msg.name());
         return new Message.RegistryReply();
     }
 
