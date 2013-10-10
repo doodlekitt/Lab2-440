@@ -77,19 +77,17 @@ class ProxyDispatcher implements Runnable {
             } else {
                 method = object.getClass().getMethod(task.method());
             }
-        } catch (NoSuchMethodException e) {
-            // TODO: Send back to stub
+        } catch (Exception e) {
             System.out.println(e);
-            return null;
+            return new Message.ProxyReply(e);
         }
         // Invoke method
         Object response = null;
         try {
             response = method.invoke(object, task.args());
         } catch (IllegalAccessException | InvocationTargetException e) {
-
             System.out.println(e);
-            return null;  // TODO: Exception handling
+            return new Message.ProxyReply(e);
         }
         return new Message.ProxyReply(response);
     }

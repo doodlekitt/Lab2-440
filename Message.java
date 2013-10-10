@@ -123,7 +123,12 @@ public static class RegistryReply implements Serializable {
     }
 
     public static class ProxyReply implements Serializable {
-        Object returned;  // The value returned
+        private Object returned = null;  // The value returned
+        private Exception ex = null; // Any exceptions thrown by the method;
+
+        public ProxyReply(Exception ex) {
+            this.ex = ex;
+        }
 
         public ProxyReply(Object returned) {
             this.returned = returned;
@@ -131,6 +136,10 @@ public static class RegistryReply implements Serializable {
 
         public Object returned() {
             return this.returned;
+        }
+
+        public Exception exception() {
+            return this.exception();
         }
     }
 
