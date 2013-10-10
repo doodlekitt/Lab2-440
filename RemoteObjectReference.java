@@ -7,13 +7,14 @@ class RemoteObjectReference implements Serializable {
     private int port;
     private String name;
     private String riname; // remote interface name
+    private Class<?> cls;
 
     public RemoteObjectReference (String host, int port, String name,
-                                  String riname) {
+                                  Class<?> cls) {
         this.host = host;
         this.port = port;
         this.name = name;
-	this.riname = riname;
+	this.cls = cls;
     }
 
     public String host(){
@@ -28,14 +29,14 @@ class RemoteObjectReference implements Serializable {
         return this.name;
     }
 
-    public String riname(){
-	return this.riname;
+    public Class<?> cls(){
+	return this.cls;
     }
 
     public Object localise() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
 	// Uses interface name to identify the class stub
-	Class<?> c = Class.forName(this.riname+"_stub");
+	Class<?> c = Class.forName(this.cls.getName()+"_stub");
 
         Object stub =c.getConstructor(RemoteObjectReference.class)
             .newInstance((Object)this);

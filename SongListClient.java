@@ -31,9 +31,9 @@ public class SongListClient{
 	RemoteObjectReference ror = rmi.lookup(name);	
 
 	// Make stub, need to write localise, may need to rename
-	SongListServer sls = null;
+	SongListServerInter sls = null;
         try { 
-            sls = (SongListServer) ror.localise();
+            sls = (SongListServerInter) ror.localise();
         } catch (Exception e) {
             System.out.println("Localise has thrown exception");
             System.out.println(e);

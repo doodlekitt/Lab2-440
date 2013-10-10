@@ -70,10 +70,10 @@ public class ExampleServer {
                     }
                 }
 	        else if(command.startsWith("new")) {
-        	    if(commandargs.length < 4) {
+        	    if(commandargs.length < 3) {
                		System.out.println("Expecting command of form:");
                 	System.out.println
-			    ("new <Class> <name> <riname> <arguments>");
+			    ("new <Class> <name> <arguments>");
              	    } else {
 			try{
                             // Check if class is valid
@@ -82,13 +82,10 @@ public class ExampleServer {
 			    // Extract object name
 			    String name = commandargs[2];
 
-			    // Extract remote interface name
-			    String riname = commandargs[3];
-
 			    // Separate arguments
 			    // do I need to check this?
 			    String[] class_args =  Arrays.copyOfRange(
-			        commandargs, 4, commandargs.length);
+			        commandargs, 3, commandargs.length);
 			    Object obj = null;
 			    objects.put(name, obj);
 
@@ -103,7 +100,7 @@ public class ExampleServer {
 			    // Create RemoteObjectReference
 			    RemoteObjectReference ror =
 				new RemoteObjectReference (host, proxyport,
-							   name, riname);
+							   name, c);
 
 			    // Bind it using RMI
 			    rmi.bind(ror, obj);

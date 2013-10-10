@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class SongListServer_stub implements SongListServer {
+public class SongListServer_stub implements SongListServerInter {
 
     private String host; // Proxy Dispatcher host
     private int port; // Proxy Dispatcher port

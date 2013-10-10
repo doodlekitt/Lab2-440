@@ -12,8 +12,8 @@ CLASSES = \
 	RMI.java \
 	ExampleServer.java \
 	SongList.java \
+	SongListServerInter.java \
 	SongListServer.java \
-	SongListServerImpl.java \
 	SongListServer_stub.java \
         SongListClient.java
 
