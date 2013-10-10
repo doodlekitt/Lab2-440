@@ -5,17 +5,17 @@ JC = javac
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-	ExampleServer.java \
+        RemoteObjectReference.java \
 	Message.java \
+        Registry.java \
 	ProxyDispatcher.java \
-	Registry.java \
-	RemoteObjectReference.java \
 	RMI.java \
+	ExampleServer.java \
 	SongList.java \
-	SongListClient.java \
 	SongListServer.java \
 	SongListServerImpl.java \
-	SongListServer_stub.java
+	SongListServer_stub.java \
+        SongListClient.java
 
 default: classes
 

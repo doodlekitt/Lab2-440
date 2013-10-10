@@ -93,8 +93,16 @@ public static class RegistryReply implements Serializable {
     public static class ProxyCommand implements Serializable {
         private String name;
         private String method;
-        private Object[] args = null;
+        private Object[] args;
 
+        // Call a method with no arguments
+        public ProxyCommand(String name, String method) {
+            this.name = name;
+            this.method = method;
+            this.args = null;
+        }
+
+        // Call a method with some arguments
         public ProxyCommand(String name, String method, Object[] args) {
             this.name = name;
             this.method = method;

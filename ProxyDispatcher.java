@@ -73,9 +73,9 @@ class ProxyDispatcher implements Runnable {
         }
         try {
             if(argsclass != null && argsclass.length > 0) {
-                method = object.getClass().getMethod(task.method());
-            } else {
                 method = object.getClass().getMethod(task.method(), argsclass);
+            } else {
+                method = object.getClass().getMethod(task.method());
             }
         } catch (NoSuchMethodException e) {
             // TODO: Send back to stub

@@ -5,17 +5,15 @@ import java.lang.reflect.*;
 class RemoteObjectReference implements Serializable {
     private String host;
     private int port;
-    private Class<?> cls;
-    String name;
-    String riname; // remote interface name
+    private String name;
+    private String riname; // remote interface name
 
-    public RemoteObjectReference (String host, int port, Class<?> cls,
-                                  String name, String intr){
+    public RemoteObjectReference (String host, int port, String name,
+                                  String riname) {
         this.host = host;
         this.port = port;
-        this.cls = cls;
         this.name = name;
-	this.riname = intr;
+	this.riname = riname;
     }
 
     public String host(){
@@ -24,10 +22,6 @@ class RemoteObjectReference implements Serializable {
 
     public int port(){
         return this.port;
-    }
-
-    public Class<?> cls() {
-        return this.cls;
     }
 
     public String name() {
@@ -43,13 +37,8 @@ class RemoteObjectReference implements Serializable {
 	// Uses interface name to identify the class stub
 	Class<?> c = Class.forName(this.riname+"_stub");
 
-	// For ease of passing relevant information for sockets
-	// pass along the remote object reference info as a string
-
-	// Neglect cls as is unnecessary
-	String[] args = {this.host, ((Integer)this.port).toString(),
-            this.name, this.riname };
-        Object stub =c.getConstructor(String[].class).newInstance((Object)args);
+        Object stub =c.getConstructor(RemoteObjectReference.class)
+            .newInstance((Object)this);
 
         return stub;
     }

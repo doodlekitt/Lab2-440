@@ -73,51 +73,45 @@ public class ExampleServer {
         	    if(commandargs.length < 4) {
                		System.out.println("Expecting command of form:");
                 	System.out.println
-				("new <Class> <name> <riname> <arguments>");
-                	return;
-             	    }
-            	    // check if class is valid
-            	    Class<?> c = null;
-            	    try{
-                	c = Class.forName(commandargs[1]);
-            	    } catch(ClassNotFoundException e){
-                	System.out.println("Invalid Class");
-                	return;
-            	    }
-				
-		    // Extract object name
-		    String name = commandargs[2];
+			    ("new <Class> <name> <riname> <arguments>");
+             	    } else {
+			try{
+                            // Check if class is valid
+                            Class<?> c = Class.forName(commandargs[1]);
 
-		    // Extract remote interface name
-		    String riname = commandargs[3];
+			    // Extract object name
+			    String name = commandargs[2];
 
-		    // Separate arguments
-		    // do I need to check this?
-            	    String[] class_args = 
-			Arrays.copyOfRange(commandargs, 4, commandargs.length);
-            	    Object obj = null;
-                    objects.put(name, obj);
+			    // Extract remote interface name
+			    String riname = commandargs[3];
 
-            	    // Now attempt to make new object
-		    try{
-                        if(class_args.length != 0) {
-			    obj = c.getConstructor(String[].class)
+			    // Separate arguments
+			    // do I need to check this?
+			    String[] class_args =  Arrays.copyOfRange(
+			        commandargs, 4, commandargs.length);
+			    Object obj = null;
+			    objects.put(name, obj);
+
+			    // Now attempt to make new object
+			    if(class_args.length != 0) {
+				obj = c.getConstructor(String[].class)
                                 .newInstance((Object)class_args);
-                        } else {
-                            obj = c.newInstance();
-                        }
-		    } catch (Exception e) {
-			System.out.println(e);
-			return;
-		    }
+			    } else {
+				obj = c.newInstance();
+			    }
 
-		    // Create RemoteObjectReference
-		    RemoteObjectReference rem = new RemoteObjectReference
-				(host, proxyport, c, name, riname);
-		
-		    // Bind it using RMI
-		    rmi.bind(rem, obj);	    	
-		}
+			    // Create RemoteObjectReference
+			    RemoteObjectReference ror =
+				new RemoteObjectReference (host, proxyport,
+							   name, riname);
+
+			    // Bind it using RMI
+			    rmi.bind(ror, obj);
+			} catch (Exception e) {
+			    System.out.println(e);
+			}
+		    }
+                }
 		else {
 		    System.out.println("Invalid Command");
 		}

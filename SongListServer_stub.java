@@ -10,10 +10,10 @@ public class SongListServer_stub implements SongListServer {
 
     private Socket stub = null;
 
-    public SongListServer_stub(String[] args){
-	this.host = args[0];
-	this.port = Integer.valueOf(args[1]).intValue();
-	this.name = args[2];
+    public SongListServer_stub(RemoteObjectReference ror){
+	this.host = ror.host();
+	this.port = ror.port();
+	this.name = ror.name();
     }
 
     public void initialise(SongList songs){
@@ -34,14 +34,12 @@ public class SongListServer_stub implements SongListServer {
         Message.ProxyReply response = (Message.ProxyReply) sendMessage(msg);
         if (response != null)
             ans = (String) response.returned();
-
         return ans;
     }
 
     public SongList findAll(){
 	String mthd = "findAll";
-	Object[] args = {};
-	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd,args);
+	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd);
         SongList ans = null;
 
         // Send message to Proxy Dispatcher and get response
@@ -54,8 +52,7 @@ public class SongListServer_stub implements SongListServer {
 
     public void printAll(){
 	String mthd = "printAll";
-	Object[] args = {};
-	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd,args);
+	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd);
 
         Message.ProxyReply ans = sendMessage(msg);
         return;
