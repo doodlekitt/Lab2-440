@@ -27,17 +27,20 @@ class ProxyDispatcher implements Runnable {
 
     private static boolean flag = true;
 
+    // Stops the run thread
     public void stop() {
         flag = false;
         try {
             // Connect once so the server stops accepting
             Socket socket = new Socket("localhost", port);
             socket.close();
-        }catch (IOException e) {
+        } catch (IOException e) {
             // Do nothing for errors
         }
     }
 
+    // Runs ProxyDispatcher
+    // Listens for, prcesses, and responds to messages from stubs
     public void run() {
         Socket client = null;
         ObjectInputStream is = null;
@@ -46,9 +49,12 @@ class ProxyDispatcher implements Runnable {
         Message.ProxyReply response = null;
         while(flag) {
             try {
+                // Listens for stubs
                 client = server.accept();
                 task = (Message.ProxyCommand)Message.recieve(client);
+                // Processes request
                 response = execute(task);
+                // Sends reply
                 Message.send(response, client);
                 client.close();
             } catch (IOException e) {
@@ -60,6 +66,7 @@ class ProxyDispatcher implements Runnable {
         }
     }
 
+    // Excecutes the method call from a stub and returns the result
     private static Message.ProxyReply execute(Message.ProxyCommand task) {
         Object object = objects.get(task.name());
         Method method = null;
@@ -71,24 +78,22 @@ class ProxyDispatcher implements Runnable {
                 argsclass[i] = task.args()[i].getClass();
             }
         }
+        Message.ProxyReply response = null;
         try {
             if(argsclass != null && argsclass.length > 0) {
                 method = object.getClass().getMethod(task.method(), argsclass);
             } else {
                 method = object.getClass().getMethod(task.method());
             }
+            // Invoke method
+            Object result = method.invoke(object, task.args());
+            response = new Message.ProxyReply(result);
+        
         } catch (Exception e) {
+            // If the method invocation throws an error, send it back to caller
             System.out.println(e);
-            return new Message.ProxyReply(e);
+            response = new Message.ProxyReply(e);
         }
-        // Invoke method
-        Object response = null;
-        try {
-            response = method.invoke(object, task.args());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            System.out.println(e);
-            return new Message.ProxyReply(e);
-        }
-        return new Message.ProxyReply(response);
+        return response;
     }
 }

@@ -16,7 +16,7 @@ public class SongListServer_stub implements SongListServerInter {
 	this.name = ror.name();
     }
 
-    public void initialise(SongList songs){
+    public void initialise(SongList songs) {
 	String mthd = "initialise";
 	Object[] args = {songs};
 	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd,args);
@@ -73,6 +73,7 @@ public class SongListServer_stub implements SongListServerInter {
         } catch (IOException e) {
             System.out.println(e);
         }
+
         return reply;
     }
 }

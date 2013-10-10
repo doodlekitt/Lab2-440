@@ -52,6 +52,8 @@ public class ExampleServer {
                     help += "quit: safely exits the server\n";
                     help += "list: lists all objects in the registry\n";
                     help += "new: creates a new object and binds it to the registry\n";
+                    
+                    help += "unbind: unbinds an object from registry";
                     System.out.print(help);
                 }
                 else if(command.startsWith("quit"))
@@ -108,6 +110,16 @@ public class ExampleServer {
 			    System.out.println(e);
 			}
 		    }
+                }
+                else if (command.startsWith("unbind")) {
+                    if (commandargs.length != 2) {
+                        System.out.println("Expecting command of form:");
+                        System.out.println
+                            ("unbind <name>");
+                    } else {
+                        String name = commandargs[1];
+                        rmi.unbind(name);
+                    }
                 }
 		else {
 		    System.out.println("Invalid Command");

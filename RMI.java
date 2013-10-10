@@ -35,6 +35,14 @@ public class RMI
         sendMessage(message);
     }
 
+    // Implements rebind by unbinding old object, binding new ohgbject
+    public void rebind(RemoteObjectReference ref, Object object) {
+        if(ref == null)
+            return;
+        unbind(ref.name());
+        bind(ref, object);
+    }
+
     public String[] list() {
         Message.RegistryCommand message = new Message.RegistryCommand(Message.RegistryCommand.Command.LIST);
         Message.RegistryReply response = sendMessage(message);
