@@ -6,7 +6,6 @@ class RemoteObjectReference implements Serializable {
     private String host;
     private int port;
     private String name;
-    private String riname; // remote interface name
     private Class<?> cls;
 
     public RemoteObjectReference (String host, int port, String name,

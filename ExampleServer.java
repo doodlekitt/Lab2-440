@@ -52,10 +52,51 @@ public class ExampleServer {
                     help += "quit: safely exits the server\n";
                     help += "list: lists all objects in the registry\n";
                     help += "new: creates a new object and binds it to the registry\n";
-                    
+		    help += "rebind: rebinds a given name to a new object\n";                    
+
                     help += "unbind: unbinds an object from registry";
                     System.out.print(help);
                 }
+		else if (command.startsWith("rebind")){
+		    if(commandargs.length != 3){
+			System.out.println("Expecting command of form:");
+			System.out.println("rebind <name> <Class> <arguments>");
+		    }else{
+                        try{
+                            // Check if class is valid
+                            Class<?> c = Class.forName(commandargs[2]);
+
+                            // Extract object name it will rebind to
+                            String name = commandargs[1];
+
+                            // Separate arguments
+                            String[] class_args =  Arrays.copyOfRange(
+                                commandargs, 3, commandargs.length);
+                            Object obj = null;
+                            objects.put(name, obj);
+
+                            // Now attempt to make new object
+                            if(class_args.length != 0) {
+                                obj = c.getConstructor(String[].class)
+                                .newInstance((Object)class_args);
+                            } else {
+                                obj = c.newInstance();
+                            }
+
+                            // Create updated RemoteObjectReference
+                            RemoteObjectReference ror =
+                                new RemoteObjectReference (host, proxyport,
+                                                           name, c);
+
+                            // Rebind it using RMI
+                            rmi.rebind(ror, obj);
+                        } catch (Exception e) {
+                            System.out.println(e);
+                        }
+
+		    }
+
+		}
                 else if(command.startsWith("quit"))
 		{
                     for (String name : objects.keySet()) {
