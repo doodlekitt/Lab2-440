@@ -10,6 +10,8 @@ public class ExampleServer {
     private static int regport;
     private static int proxyport;
 
+    private static HashMap<String,Object> objects = new HashMap<String,Object>;
+
     // Takes these as arguments
     // (0) registry host
     // (1) registry port
@@ -44,8 +46,19 @@ public class ExampleServer {
 
 		commandargs = command.split(" ");
 
-		if(command.startsWith("quit"))
+                if(command.startsWith("help")) {
+                    String help = "";
+		    help += "Available commands:\n";
+                    help += "quit: safely exits the server\n";
+                    help += "list: lists all objects in the registry\n";
+                    help += "new: creates a new object and binds it to the registry\n";
+                    System.out.print(help);
+                }
+                else if(command.startsWith("quit"))
 		{
+                    for (String name : objects.keySet()) {
+                        rmi.unbind(name);;
+                    }
 		    break;
 		}
                 else if(command.startsWith("list")) {
@@ -82,6 +95,7 @@ public class ExampleServer {
             	    String[] class_args = 
 			Arrays.copyOfRange(commandargs, 4, commandargs.length);
             	    Object obj = null;
+                    objects.put("name", obj);
 
             	    // Now attempt to make new object
 		    try{
