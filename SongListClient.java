@@ -27,8 +27,8 @@ public class SongListClient{
 	BufferedReader in = new BufferedReader(new FileReader(args[4]));
 
 	// Create an instance of RMI to connect to registry
-	RMI rem = new RMI(reghost, regport, proxyport);	
-	RemoteObjectReference ror = rem.lookup(name);	
+	RMI rmi = new RMI(reghost, regport, proxyport);	
+	RemoteObjectReference ror = rmi.lookup(name);	
 
 	// Make stub, need to write localise, may need to rename
 	SongListServer sls = null;
@@ -90,6 +90,7 @@ public class SongListClient{
 	sls.printAll();
         System.out.println("Done with ALL THE THINGS!!");
 
+        rmi.close();
         return;
     } 
 

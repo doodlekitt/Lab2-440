@@ -63,4 +63,8 @@ System.out.println("Sent message");
         }
         return response;
     }
+
+    public void close() {
+        proxy.stop();
+    }
 }

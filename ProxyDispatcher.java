@@ -27,40 +27,40 @@ class ProxyDispatcher implements Runnable {
         objects.remove(name);
     }
 
-    //private static class Accept implements Runnable {
+    private static boolean flag = true;
 
-        private static boolean flag = true;
-
-        public void stop() {
-            flag = false;
+    public void stop() {
+        flag = false;
+        try {
+            // Connect once so the server stops accepting
+            Socket socket = new Socket("localhost", port);
+            socket.close();
+        }catch (IOException e) {
+            // Do nothing
         }
+    }
 
-        public void run() {
-            Socket client = null;
-            ObjectInputStream is = null;
-            ObjectOutputStream os = null;
-            Message.ProxyCommand task = null;
-            Message.ProxyReply response = null;
-            while(flag) {
-                try {
-                    client = server.accept();
-                    task = (Message.ProxyCommand)Message.recieve(client);
-                    response = execute(task);
-                    Message.send(response, client);
-                    client.close();
-                } catch (IOException e) {
-                    // Don't print exception when stopping thread
-                    if(flag) {
-                        System.out.println(e);
-                    }
+    public void run() {
+        Socket client = null;
+        ObjectInputStream is = null;
+        ObjectOutputStream os = null;
+        Message.ProxyCommand task = null;
+        Message.ProxyReply response = null;
+        while(flag) {
+            try {
+                client = server.accept();
+                task = (Message.ProxyCommand)Message.recieve(client);
+                response = execute(task);
+                Message.send(response, client);
+                client.close();
+            } catch (IOException e) {
+                // Don't print exception when stopping thread
+                if(flag) {
+                    System.out.println(e);
                 }
             }
         }
-
-        //public static void main(String ags[]) {
-        //    (new Thread(new ProxyDispatcher)).start();
-        //}
-    //}
+    }
 
     private static Message.ProxyReply execute(Message.ProxyCommand task) {
         Object object = objects.get(task.name());

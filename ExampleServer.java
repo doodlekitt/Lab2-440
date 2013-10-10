@@ -110,6 +110,7 @@ public class ExampleServer {
 	    }
 
             // Clean up
+            rmi.close();
             br.close();
 	} catch (IOException e){
 	    System.out.println(e);

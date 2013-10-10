@@ -59,8 +59,8 @@ public class SongListServer_stub implements SongListServer {
 	Object[] args = {};
 	Message.ProxyCommand msg =new Message.ProxyCommand(this.name,mthd,args);
 
-        // recieve message, don't return anything since the function is void
         Message.ProxyReply ans = sendMessage(msg);
+        return;
     }
 
     private Message.ProxyReply sendMessage(Message.ProxyCommand message) {
