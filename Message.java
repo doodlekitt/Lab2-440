@@ -63,33 +63,34 @@ public class Message {
     }
 }
 
-public static class RegistryReply implements Serializable {
-    String[] names;
-    RemoteObjectReference ref;
+    public static class RegistryReply implements Serializable {
+	String[] names;
+	RemoteObjectReference ref;
 
-    // For BIND and UNBIND RESPONSE
-    public RegistryReply() {}
+	// For BIND and UNBIND RESPONSE
+	public RegistryReply() {}
 
-    // For LIST RESPONSE
-    public RegistryReply (String[] names){
-        this.names = names;
+	// For LIST RESPONSE
+	public RegistryReply (String[] names){
+	    this.names = names;
+	}
+
+	// For LOOKUP RESPONSE
+	public RegistryReply (RemoteObjectReference ref){
+	    this.ref = ref;
+	}
+
+	// Accessors
+	public RemoteObjectReference ref(){
+	    return this.ref;
+	}
+
+	public String[] names(){
+	    return this.names;
+	}
     }
 
-    // For LOOKUP RESPONSE
-    public RegistryReply (RemoteObjectReference ref){
-         this.ref = ref;
-    }
-
-    // Accessors
-    public RemoteObjectReference ref(){
-        return this.ref;
-    }
-
-    public String[] names(){
-        return this.names;
-    }
-}
-
+    // Sent by stubs to proxy
     public static class ProxyCommand implements Serializable {
         private String name;
         private String method;
@@ -122,6 +123,7 @@ public static class RegistryReply implements Serializable {
         }
     }
 
+    // Sent by proxy to stubs
     public static class ProxyReply implements Serializable {
         private Object returned = null;  // The value returned
         private Exception ex = null; // Any exceptions thrown by the method;
