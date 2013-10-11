@@ -15,7 +15,11 @@ CLASSES = \
 	SongListServerInter.java \
 	SongListServer.java \
 	SongListServer_stub.java \
-        SongListClient.java
+        SongListClient.java \
+	MathInter.java \
+	MathImpl.java \
+	MathImpl_stub.java \
+        MathClient.java
 
 default: classes
 

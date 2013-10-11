@@ -27,10 +27,23 @@ public class SongListClient{
 	BufferedReader in = new BufferedReader(new FileReader(args[4]));
 
 	// Create an instance of RMI to connect to registry
-	RMI rmi = new RMI(reghost, regport, proxyport);	
-	RemoteObjectReference ror = rmi.lookup(name);	
+	RMI rmi = null;
+        RemoteObjectReference ror = null;
+        try {
+            rmi = new RMI(reghost, regport, proxyport);
+            ror = rmi.lookup(name);
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("\nOne of your arguments was incorrect. " +
+                               "Are the hosts and ports all valid?");
+            System.out.println("Or perhaps Object " + name +
+                               " isn't in the registry");
+            if(rmi != null)
+                rmi.close();
+            return;
+        }
 
-	// Make stub, need to write localise, may need to rename
+	// Make stub
 	SongListServerInter sls = null;
         try { 
             sls = (SongListServerInter) ror.localise();

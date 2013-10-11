@@ -39,6 +39,8 @@ class Registry {
         }
     }
 
+    // Parses the message and delegates to various functions depending
+    // on the command types
     private static Message.RegistryReply processMessage(Message.RegistryCommand message) {
         Message.RegistryReply response = null;
         if(message == null)
@@ -46,8 +48,7 @@ class Registry {
         switch (message.command()) {
             case BIND: response = bind(message);
                        break;
-            case UNBIND: System.out.println("Recieved unbind request");
-                         response = unbind(message);
+            case UNBIND: response = unbind(message);
                          break;
             case LOOKUP: response = lookup(message);
                          break;
@@ -63,6 +64,7 @@ class Registry {
             System.out.println("Cannot BIND with null ROR");
             return null;
         }
+        System.out.println("Binding " + message.ref().name());
         objects.put(message.ref().name(), message.ref());
         return new Message.RegistryReply();
     }
@@ -73,6 +75,7 @@ class Registry {
                 + msg.name());
             return null;
         }
+        System.out.println("Unbinding " + msg.name());
         objects.remove(msg.name());
         return new Message.RegistryReply();
     }
@@ -84,13 +87,16 @@ class Registry {
             names[i] = name;
             i++;
         }
+        System.out.println("Listing registered names");
         return new Message.RegistryReply(names);
     }
 
     public static Message.RegistryReply lookup(Message.RegistryCommand message){
         if(message.name() == null || !objects.containsKey(message.name())) {
-            return null;  // TODO: Return error message
+            System.out.println("Cannot lookup " + message.name());
+            return null;
         }
+        System.out.println("Looking up " + message.name());
         RemoteObjectReference ref = objects.get(message.name());
         return new Message.RegistryReply(ref);
     }
